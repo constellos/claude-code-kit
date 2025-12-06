@@ -8,7 +8,7 @@ on:
       - 'bin/**'
       - 'package.json'
       - 'tsconfig*.json'
-      - 'build.ts'
+      - 'tsup.config.ts'
   workflow_dispatch:  # Manual trigger (bypasses path filter)
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
           bun-version: latest
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'  # Includes npm 11+ for OIDC support
+          node-version: '24'  # Ships with npm 11+ for OIDC trusted publishing
           registry-url: 'https://registry.npmjs.org'
 
       - run: bun install --frozen-lockfile
