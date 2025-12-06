@@ -38,6 +38,17 @@
       "import": "./dist/format/index.js"
     }
   },
+  "typesVersions": {
+    "*": {
+      "types": ["./dist/types/index.d.ts"],
+      "types/hooks": ["./dist/types/hooks/index.d.ts"],
+      "schemas": ["./dist/schemas/index.d.ts"],
+      "transcripts": ["./dist/transcripts/index.d.ts"],
+      "runners": ["./dist/runners/index.d.ts"],
+      "mcp": ["./dist/mcp/index.d.ts"],
+      "format": ["./dist/format/index.d.ts"]
+    }
+  },
   "bin": {
     "cck": "bin/cck.js",
     "claude-code-kit": "bin/cck.js",
