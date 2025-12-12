@@ -7,5 +7,6 @@
   },
   "repository": "https://github.com/constellos/claude-code-kit",
   "license": "MIT",
-  "keywords": ["github", "vercel", "supabase", "ci", "cd"]
+  "keywords": ["github", "vercel", "supabase", "ci", "cd"],
+  "hooks": "./hooks/hooks.json"
 }
