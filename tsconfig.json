@@ -18,12 +18,11 @@
   "include": [
     "packages/*/lib/**/*.ts",
     "packages/*/hooks/**/*.ts",
-    "packages/*/*.ts"
+    "packages/*/*.ts",
+    "packages/*/__tests__/**/*.ts"
   ],
   "exclude": [
     "node_modules",
-    "src",
-    "dist",
-    "bin"
+    "dist"
   ]
 }

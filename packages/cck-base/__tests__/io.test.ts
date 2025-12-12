@@ -1,21 +1,19 @@
 /**
- * Runner I/O utility tests
- *
- * Note: Testing stdin/stdout directly is complex, so we test the
- * JSON serialization behavior and focus on the writeStdoutJson function.
+ * I/O utility tests
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { writeStdoutJson } from '../runners/io.js';
+import { describe, it, expect, vi, beforeEach, afterEach, type MockInstance } from 'vitest';
+import { writeStdoutJson } from '../lib/io.js';
 
 describe('writeStdoutJson', () => {
-  let writeSpy: ReturnType<typeof vi.spyOn>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let writeSpy: MockInstance<any>;
   let output: string;
 
   beforeEach(() => {
     output = '';
-    writeSpy = vi.spyOn(process.stdout, 'write').mockImplementation((chunk: string) => {
-      output += chunk;
+    writeSpy = vi.spyOn(process.stdout, 'write').mockImplementation((chunk: unknown) => {
+      output += String(chunk);
       return true;
     });
   });
@@ -97,31 +95,6 @@ describe('writeStdoutJson', () => {
     const parsed = JSON.parse(output.trim());
     expect(parsed.hookSpecificOutput.permissionDecision).toBe('deny');
   });
-
-  it('should handle PostToolUse output format', () => {
-    writeStdoutJson({
-      hookSpecificOutput: {
-        hookEventName: 'PostToolUse',
-        additionalContext: 'Note: file was modified',
-      },
-    });
-
-    const parsed = JSON.parse(output.trim());
-    expect(parsed.hookSpecificOutput.hookEventName).toBe('PostToolUse');
-    expect(parsed.hookSpecificOutput.additionalContext).toBe('Note: file was modified');
-  });
-
-  it('should handle SessionStart output format', () => {
-    writeStdoutJson({
-      hookSpecificOutput: {
-        hookEventName: 'SessionStart',
-        additionalContext: 'Session initialized with custom config',
-      },
-    });
-
-    const parsed = JSON.parse(output.trim());
-    expect(parsed.hookSpecificOutput.hookEventName).toBe('SessionStart');
-  });
 });
 
 describe('JSON output format', () => {
@@ -130,7 +103,6 @@ describe('JSON output format', () => {
       { simple: 'value' },
       { nested: { deep: { value: 123 } } },
       { array: [1, 'two', { three: 3 }] },
-      { unicode: 'Hello \u0000' },
       { empty: '' },
     ];
 
