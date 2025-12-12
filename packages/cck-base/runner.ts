@@ -8,7 +8,7 @@
  * Reads JSON from stdin, executes the hook, writes JSON to stdout.
  *
  * Debug mode:
- * - When the hook input contains `debug: true`, logs all calls and errors
+ * - When the hook input contains `debug: true`, logs all calls to .claude/logs/hook-events.json
  * - On error with debug: returns blocking error response
  * - On error without debug: returns pass-through response (fails silently)
  */
@@ -122,14 +122,14 @@ async function main(): Promise<void> {
 
   try {
     // Log input if debug enabled
-    await logger.log('Hook input received', input);
+    await logger.logInput(input);
 
     // Load and execute hook
     const hook = await loadHook(hookPath);
     const output = await hook(input);
 
     // Log output if debug enabled
-    await logger.log('Hook output', output);
+    await logger.logOutput(output);
 
     // Write output to stdout
     writeStdoutJson(output);
@@ -138,7 +138,7 @@ async function main(): Promise<void> {
     const err = error instanceof Error ? error : new Error(String(error));
 
     // Log error
-    await logger.error('Hook execution failed', err);
+    await logger.logError(err);
 
     if (debug) {
       // Debug mode: return blocking error

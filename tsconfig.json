@@ -16,9 +16,9 @@
     "types": ["node"]
   },
   "include": [
-    "lib/**/*.ts",
-    "hooks/**/*.ts",
-    "runner.ts"
+    "packages/*/lib/**/*.ts",
+    "packages/*/hooks/**/*.ts",
+    "packages/*/*.ts"
   ],
   "exclude": [
     "node_modules",

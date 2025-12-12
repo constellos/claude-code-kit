@@ -1,17 +1,17 @@
 {
   "name": "claude-code-kit",
   "version": "1.0.0",
-  "description": "Claude Code plugin - hook runner and utilities for hook development",
+  "description": "Claude Code plugin collection - hook utilities and development tools",
   "type": "module",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "lint": "eslint lib hooks runner.ts",
+    "lint": "eslint packages/",
     "test": "vitest run",
     "test:watch": "vitest"
-  },
-  "dependencies": {
-    "gray-matter": "^4.0.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.16.0",
@@ -22,10 +22,6 @@
     "typescript": "^5.4.0",
     "typescript-eslint": "^8.17.0",
     "vitest": "^2.0.0"
-  },
-  "claudeCodeCompat": {
-    "min": "1.0.30",
-    "tested": "1.0.35"
   },
   "repository": {
     "type": "git",

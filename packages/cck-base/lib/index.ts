@@ -20,6 +20,7 @@ export {
   createPassthroughResponse,
   type DebugConfig,
   type DebugLogger,
+  type HookEventEntry,
 } from './debug.js';
 
 // Transcript parsing

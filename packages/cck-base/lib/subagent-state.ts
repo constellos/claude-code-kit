@@ -15,7 +15,12 @@ import {
   getEditedFiles,
 } from './transcripts.js';
 
-const DEFAULT_CONTEXT_PATH = '.claude/state/active-subagents.json';
+// ============================================================================
+// Constants
+// ============================================================================
+
+const LOGS_DIR = '.claude/logs';
+const SUBAGENT_TASKS_FILE = 'subagent-tasks.json';
 
 // ============================================================================
 // Types
@@ -30,7 +35,7 @@ export interface AgentStartContext {
   toolUseId: string;
 }
 
-interface ActiveSubagentsMap {
+interface SubagentTasksMap {
   [agentId: string]: AgentStartContext;
 }
 
@@ -53,6 +58,13 @@ export interface AgentEditsResult {
 // ============================================================================
 
 /**
+ * Get the path to subagent-tasks.json
+ */
+function getTasksFilePath(cwd: string, customPath?: string): string {
+  return customPath || path.join(cwd, LOGS_DIR, SUBAGENT_TASKS_FILE);
+}
+
+/**
  * Save agent context at SubagentStart for later retrieval at SubagentStop
  */
 export async function saveAgentStartContext(
@@ -65,7 +77,7 @@ export async function saveAgentStartContext(
   },
   outputPath?: string
 ): Promise<AgentStartContext> {
-  const contextPath = outputPath || path.join(input.cwd, DEFAULT_CONTEXT_PATH);
+  const contextPath = getTasksFilePath(input.cwd, outputPath);
   const timestamp = new Date().toISOString();
 
   // Parse parent transcript to find the Task call
@@ -82,7 +94,7 @@ export async function saveAgentStartContext(
   };
 
   // Load existing contexts
-  let contexts: ActiveSubagentsMap = {};
+  let contexts: SubagentTasksMap = {};
   try {
     const existing = await fs.readFile(contextPath, 'utf-8');
     contexts = JSON.parse(existing);
@@ -107,10 +119,10 @@ export async function loadAgentStartContext(
   cwd: string,
   contextPath?: string
 ): Promise<AgentStartContext | undefined> {
-  const filePath = contextPath || path.join(cwd, DEFAULT_CONTEXT_PATH);
+  const filePath = getTasksFilePath(cwd, contextPath);
   try {
     const content = await fs.readFile(filePath, 'utf-8');
-    const contexts: ActiveSubagentsMap = JSON.parse(content);
+    const contexts: SubagentTasksMap = JSON.parse(content);
     return contexts[agentId];
   } catch {
     return undefined;
@@ -125,10 +137,10 @@ export async function removeAgentStartContext(
   cwd: string,
   contextPath?: string
 ): Promise<void> {
-  const filePath = contextPath || path.join(cwd, DEFAULT_CONTEXT_PATH);
+  const filePath = getTasksFilePath(cwd, contextPath);
   try {
     const content = await fs.readFile(filePath, 'utf-8');
-    const contexts: ActiveSubagentsMap = JSON.parse(content);
+    const contexts: SubagentTasksMap = JSON.parse(content);
     delete contexts[agentId];
     await fs.writeFile(filePath, JSON.stringify(contexts, null, 2), 'utf-8');
   } catch {

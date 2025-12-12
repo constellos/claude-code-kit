@@ -1,7 +1,7 @@
 {
-  "name": "claude-code-kit",
+  "name": "cck-base",
   "version": "1.0.0",
-  "description": "Hook runner and utilities for Claude Code development - types, transcript parsing, and subagent state management",
+  "description": "Base hooks and utilities for Claude Code development - types, runner, subagent tracking",
   "author": {
     "name": "constellos"
   },

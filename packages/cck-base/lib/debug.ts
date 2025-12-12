@@ -7,6 +7,13 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 
 // ============================================================================
+// Constants
+// ============================================================================
+
+const LOGS_DIR = '.claude/logs';
+const HOOK_EVENTS_FILE = 'hook-events.json';
+
+// ============================================================================
 // Types
 // ============================================================================
 
@@ -14,14 +21,37 @@ export interface DebugConfig {
   debug?: boolean;
 }
 
+export interface HookEventEntry {
+  timestamp: string;
+  event: string;
+  type: 'input' | 'output' | 'error';
+  data: unknown;
+}
+
 export interface DebugLogger {
-  log: (message: string, data?: unknown) => Promise<void>;
-  error: (message: string, error?: Error) => Promise<void>;
+  logInput: (input: unknown) => Promise<void>;
+  logOutput: (output: unknown) => Promise<void>;
+  logError: (error: Error) => Promise<void>;
 }
 
 // ============================================================================
-// Debug Logging
+// Debug Logging (JSONL append to hook-events.json)
 // ============================================================================
+
+/**
+ * Append a hook event entry to hook-events.json (JSONL format)
+ */
+async function appendHookEvent(cwd: string, entry: HookEventEntry): Promise<void> {
+  const logDir = path.join(cwd, LOGS_DIR);
+  const logFile = path.join(logDir, HOOK_EVENTS_FILE);
+
+  try {
+    await fs.mkdir(logDir, { recursive: true });
+    await fs.appendFile(logFile, JSON.stringify(entry) + '\n', 'utf-8');
+  } catch {
+    // Silently fail - don't break hook execution for logging
+  }
+}
 
 /**
  * Create a debug logger for a hook execution
@@ -31,43 +61,39 @@ export function createDebugLogger(
   hookEventName: string,
   debug: boolean
 ): DebugLogger {
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const logDir = path.join(cwd, '.claude', 'logs', 'hooks');
-  const logFile = path.join(logDir, `${timestamp}-${hookEventName}.json`);
-
-  const entries: Array<{ time: string; type: string; message: string; data?: unknown }> = [];
-
-  const writeLog = async () => {
-    if (!debug || entries.length === 0) return;
-    try {
-      await fs.mkdir(logDir, { recursive: true });
-      await fs.writeFile(logFile, JSON.stringify(entries, null, 2), 'utf-8');
-    } catch {
-      // Silently fail - don't break hook execution for logging
-    }
-  };
-
   return {
-    log: async (message: string, data?: unknown) => {
+    logInput: async (input: unknown) => {
       if (!debug) return;
-      entries.push({
-        time: new Date().toISOString(),
-        type: 'log',
-        message,
-        data,
+      await appendHookEvent(cwd, {
+        timestamp: new Date().toISOString(),
+        event: hookEventName,
+        type: 'input',
+        data: input,
       });
-      await writeLog();
     },
 
-    error: async (message: string, error?: Error) => {
+    logOutput: async (output: unknown) => {
       if (!debug) return;
-      entries.push({
-        time: new Date().toISOString(),
-        type: 'error',
-        message,
-        data: error ? { name: error.name, message: error.message, stack: error.stack } : undefined,
+      await appendHookEvent(cwd, {
+        timestamp: new Date().toISOString(),
+        event: hookEventName,
+        type: 'output',
+        data: output,
       });
-      await writeLog();
+    },
+
+    logError: async (error: Error) => {
+      if (!debug) return;
+      await appendHookEvent(cwd, {
+        timestamp: new Date().toISOString(),
+        event: hookEventName,
+        type: 'error',
+        data: {
+          name: error.name,
+          message: error.message,
+          stack: error.stack,
+        },
+      });
     },
   };
 }
