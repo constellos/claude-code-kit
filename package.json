@@ -4,12 +4,9 @@
   "description": "Claude Code plugin collection - hook utilities and development tools",
   "type": "module",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "lint": "eslint packages/",
+    "lint": "eslint plugins/ shared/",
     "test": "vitest run",
     "test:watch": "vitest"
   },
