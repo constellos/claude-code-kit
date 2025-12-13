@@ -1,7 +1,7 @@
 {
   "outputStyle": "architect-delegator",
   "extraKnownMarketplaces": {
-    "claude-code-kit-local": {
+    "constellos-local": {
       "source": {
         "source": "file",
         "path": "./.claude-plugin/marketplace.json"
@@ -9,9 +9,9 @@
     }
   },
   "enabledPlugins": {
-    "github-vercel-supabase-ci@constellos": true,
-    "nextjs-supabase-ai-sdk-dev@constellos": true,
-    "claude-code-config@constellos": true
+    "github-vercel-supabase-ci@constellos-local": true,
+    "nextjs-supabase-ai-sdk-dev@constellos-local": true,
+    "claude-code-config@constellos-local": true
   },
   "enabledMcpjsonServers": [
     "next-devtools"
@@ -90,7 +90,6 @@
       "Bash(bun publish:*)"
     ],
     "ask": [
-    
       "Bash(curl:*)",
       "Bash(pkill:*)",
       "Bash(mv:*)",
@@ -101,7 +100,6 @@
 
       "Bash(bun run build:*)",
       "Bash(bun run start:*)",
-      "Bash(bun run dev:*)",
 
       "Bash(echo:*)",
       "Bash(printf:*)",
