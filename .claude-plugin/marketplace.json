@@ -1,6 +1,6 @@
 {
   "$schema": "https://code.claude.com/schemas/marketplace-schema.json",
-  "name": "Constellos Claude Code Kit",
+  "name": "constellos",
   "version": "1.0.0",
   "owner": {
     "name": "constellos"
@@ -25,9 +25,9 @@
       "description": "Next.js, Supabase, and AI SDK development utilities",
       "version": "0.1.0",
       "author": {
-        "name": "constellos"
+        "name": "Sylvan Systems + Claude",
       },
-      "source": "../plugins/nextjs-supabase-ai-sdk-dev",
+      "source": "./plugins/nextjs-supabase-ai-sdk-dev",
       "strict": false
     },
     {
@@ -35,9 +35,9 @@
       "description": "Claude Code configuration management",
       "version": "0.1.0",
       "author": {
-        "name": "constellos"
+        "name": "Sylvan Systems + Claude",
       },
-      "source": "../plugins/claude-code-config",
+      "source": "./plugins/claude-code-config",
       "strict": false
     }
   ]
