@@ -15,9 +15,9 @@
       "description": "CI/CD hooks and utilities for GitHub, Vercel, and Supabase",
       "version": "0.1.0",
       "author": {
-        "name": "Sylvan Systems + Claude",
+        "name": "constellos"
       },
-      "source": "./plugins/github-vercel-supabase-ci",
+      "source": "../plugins/github-vercel-supabase-ci",
       "strict": false
     },
     {
